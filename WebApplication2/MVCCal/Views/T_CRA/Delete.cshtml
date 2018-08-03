@@ -1,0 +1,72 @@
+﻿@model MVCCal.T_CRA
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>T_CRA</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MOIS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MOIS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ANNEE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ANNEE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.JOUR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.JOUR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.JOURINFO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.JOURINFO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DATEMS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DATEMS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.T_CONSULTANT.NOM)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.T_CONSULTANT.NOM)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

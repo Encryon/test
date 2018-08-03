@@ -1,0 +1,63 @@
+﻿@model IEnumerable<MVCCal.T_CRA>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.MOIS)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ANNEE)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.JOUR)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.JOURINFO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DATEMS)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.T_CONSULTANT.NOM)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.MOIS)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ANNEE)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.JOUR)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.JOURINFO)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DATEMS)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.T_CONSULTANT.NOM)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>

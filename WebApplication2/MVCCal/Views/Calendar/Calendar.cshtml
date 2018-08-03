@@ -1,0 +1,193 @@
+﻿
+@{
+    ViewBag.Title = "Calendar";
+}
+
+<h2>Calendar</h2>
+
+<div class="btn-group">
+    <button class="btn btn-primary" data-calendar-nav="prev"><< Prev</button>
+    <button class="btn btn-default" data-calendar-nav="today">Today</button>
+    <button class="btn btn-primary" data-calendar-nav="next">Next >></button>
+</div>
+<div class="btn-group">
+    <button class="btn btn-warning" data-calendar-view="year">Year</button>
+    <button class="btn btn-warning active" data-calendar-view="month">Month</button>
+    <button class="btn btn-warning" data-calendar-view="week">Week</button>
+
+</div>
+<hr />
+<div class="btn-group-lg ">
+    <button class="btn btn-group" data-calendar-view="Add">Add Event</button>
+    <a href="#" data-target="#editModal" data-toggle="modal" class="btn btn-group">Add Event Ajax</a>
+    @Html.ActionLink("Add Event Modal", "ViewCreate", "Calendar", null, new { @class = "modal-link btn btn-success" })
+</div>
+
+<div id="calendar"></div>
+<label class="checkbox">
+    @*<input type="checkbox" value="#events-modal" id="events-in-modal"> Open events in modal window*@
+</label>
+
+
+@*<style>
+         .modal-content {
+         width: 600px !important;
+         margin: 30px auto !important;
+     }
+
+</style>*@
+
+@*<div id="modal-container" class="modal fade" style="width:400px;margin:50px;"
+     tabindex="-1" role="dialog">
+    <div class="modal-content">
+    </div>
+</div>*@
+
+<style>
+    .modal-content {
+        width: auto;/*600px !important;*/
+        margin: auto;/*30px auto !important;*/
+        height:auto;
+    }
+</style>
+
+@*<div class="modal" id="modal-container" tabindex="-1" role="dialog">
+        @*<div class="modal-dialog">*@
+       
+        @*<div class="modal-content">*@
+        @*</div>*@
+    @*</div>*@
+@*</div>*@
+
+<div class="modal fade" id="modal-container" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*<script type="text/javascript" src="../Scripts/jquery-1.10.2.js"></script>*@
+
+
+
+<script type="text/javascript" src="../Scripts/calendar.js"></script>
+<script src="../Scripts/app.js"></script>
+
+
+<script type="text/javascript">
+    var calendar = $('#calendar').calendar({
+        events_source: '/Calendar/GetEvents'
+    });
+</script>
+
+@*<script type="text/javascript">
+
+    $(function () {
+        $('.editModal').modal();
+    });
+
+    function addeventcalendar() {
+        $.ajax({
+            url: '/T_CRA/Create/', // The method name + paramater
+            success: function (data) {
+                $('#modalWrapper').html(data); // This should be an empty div where you can inject your new html (the partial view)
+            }
+        });
+    }
+</script>*@
+
+<script type="text/javascript">
+        $(function () {
+            // Initialize numeric spinner input boxes
+            //$(".numeric-spinner").spinedit();
+            // Initialize modal dialog
+            // attach modal-container bootstrap attributes to links with .modal-link class.
+            // when a link is clicked with these attributes, bootstrap will display the href content in a modal dialog.
+            $('body').on('click', '.modal-link', function (e) {
+                e.preventDefault();
+                $(this).attr('data-target', '#modal-container');
+                $(this).attr('data-toggle', 'modal');
+            });
+            // Attach listener to .modal-close-btn's so that when the button is pressed the modal dialog disappears
+            $('body').on('click', '.modal-close-btn', function () {
+                $('#modal-container').modal('hide');
+            });
+            //clear modal cache, so that new content can be loaded
+            $('#modal-container').on('hidden.bs.modal', function () {
+                $(this).removeData('bs.modal');
+            });
+            $('#CancelModal').on('click', function () {
+                return false;
+            });
+        });
+</script>
+
+!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @*@Html.Partial("~/Views/T_CRA/CreateEvent.cshtml")*@ 
+
+                @{Html.RenderAction("ViewCreate");}
+                
+                @*@Html.RenderAction("ViewCreate")*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<p>Date: <input type="text" id="datepicker"></p>
+<script>
+  $( function() {
+    $( "#datepicker" ).datepicker();
+  } );
+</script>
+            <div class="form-group">
+                <div class='input-group date' >
+                    <input type='text' class="form-control" id='datetimepicker2' />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+<script type="text/javascript">
+    $(function () {
+        $("#datetimepicker2").datepicker();
+    });
+</script>
+<div class="form-group">
+       
+    @{Html.TextBox("", String.Format("{0:d}", Model.ToShortDateString()), new { @class = "datefield", type = "date" });}
+
+</div>

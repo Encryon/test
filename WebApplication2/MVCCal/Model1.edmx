@@ -1,0 +1,618 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DevRedSolCRModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="T_CONSULTANT">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NOM" Type="nvarchar" MaxLength="50" />
+          <Property Name="PRENOM" Type="nvarchar" MaxLength="50" />
+          <Property Name="CLIENT" Type="nvarchar" MaxLength="50" />
+          <Property Name="SOCIETE" Type="nvarchar" MaxLength="50" />
+          <Property Name="CONTRAT" Type="nvarchar" MaxLength="50" />
+          <Property Name="CUSTOMER_ID" Type="int" />
+          <Property Name="PROJECT_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="T_CRA">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MOIS" Type="nvarchar" MaxLength="2" />
+          <Property Name="ANNEE" Type="nvarchar" MaxLength="4" />
+          <Property Name="RESSOURCE" Type="int" />
+          <Property Name="JOUR" Type="nvarchar" MaxLength="2" />
+          <Property Name="JOURINFO" Type="int" />
+          <Property Name="DATEMS" Type="bigint" />
+        </EntityType>
+        <EntityType Name="T_CUSTOMER">
+          <Key>
+            <PropertyRef Name="CUSTOMER_ID" />
+          </Key>
+          <Property Name="CUSTOMER_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CUSTOMER_NAME" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="CUSTOMER_CONTRACT" Type="nvarchar" MaxLength="250" />
+          <Property Name="CUSTOMER_CONTACT" Type="nvarchar" MaxLength="250" />
+          <Property Name="CUSTOMER_EMAIL" Type="nvarchar" MaxLength="250" />
+          <Property Name="CUSTOMER_ADDRESS" Type="nvarchar" MaxLength="500" />
+          <Property Name="CUSTOMER_PROJECT_ID" Type="int" Nullable="false" />
+          <Property Name="CUSTOMER_CREATION" Type="datetime" />
+          <Property Name="CUSTOMER_UPDATE" Type="datetime" />
+          <Property Name="CUSTOMER_ACTIF" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="T_PROJECT">
+          <Key>
+            <PropertyRef Name="PROJECT_ID" />
+          </Key>
+          <Property Name="PROJECT_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PROJECT_NAME" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="PROJECT_ACTIF" Type="bit" Nullable="false" />
+          <Property Name="PROJECT_CREATION" Type="datetime" />
+          <Property Name="PROJECT_UPDATE" Type="datetime" />
+        </EntityType>
+        <EntityType Name="T_TYPEJOUR">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TYPE" Type="nvarchar" MaxLength="50" />
+          <Property Name="NOMBRE" Type="int" />
+          <Property Name="COLOR" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_T_CONSULTANT_T_CUSTOMER">
+          <End Role="T_CUSTOMER" Type="Self.T_CUSTOMER" Multiplicity="0..1" />
+          <End Role="T_CONSULTANT" Type="Self.T_CONSULTANT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_CUSTOMER">
+              <PropertyRef Name="CUSTOMER_ID" />
+            </Principal>
+            <Dependent Role="T_CONSULTANT">
+              <PropertyRef Name="CUSTOMER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_CONSULTANT_T_PROJECT">
+          <End Role="T_PROJECT" Type="Self.T_PROJECT" Multiplicity="0..1" />
+          <End Role="T_CONSULTANT" Type="Self.T_CONSULTANT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_PROJECT">
+              <PropertyRef Name="PROJECT_ID" />
+            </Principal>
+            <Dependent Role="T_CONSULTANT">
+              <PropertyRef Name="PROJECT_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_CRA_T_CONSULTANT">
+          <End Role="T_CONSULTANT" Type="Self.T_CONSULTANT" Multiplicity="0..1" />
+          <End Role="T_CRA" Type="Self.T_CRA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_CONSULTANT">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="T_CRA">
+              <PropertyRef Name="RESSOURCE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_CRA_T_TYPEJOUR">
+          <End Role="T_TYPEJOUR" Type="Self.T_TYPEJOUR" Multiplicity="0..1" />
+          <End Role="T_CRA" Type="Self.T_CRA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_TYPEJOUR">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="T_CRA">
+              <PropertyRef Name="JOURINFO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="AddMonthValues" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MOIS" Type="nvarchar" Mode="In" />
+          <Parameter Name="ANNEE" Type="nvarchar" Mode="In" />
+          <Parameter Name="RESSOURCE" Type="int" Mode="In" />
+          <Parameter Name="JOUR" Type="nvarchar" Mode="In" />
+          <Parameter Name="JOURINFO" Type="int" Mode="In" />
+        </Function>
+        <Function Name="DeleteDayMonthValues" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MOIS" Type="nvarchar" Mode="In" />
+          <Parameter Name="ANNEE" Type="nvarchar" Mode="In" />
+          <Parameter Name="JOUR" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="DeleteMonthValues" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MOIS" Type="nvarchar" Mode="In" />
+          <Parameter Name="ANNEE" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="LoadAllEventCRA" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="LoadCRAMonth" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MOIS" Type="nvarchar" Mode="In" />
+          <Parameter Name="ANNEE" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="LoadLegende" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="LoadMonthValues" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MOIS" Type="nvarchar" Mode="In" />
+          <Parameter Name="ANNEE" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="DevRedSolCRModelStoreContainer">
+          <EntitySet Name="T_CONSULTANT" EntityType="Self.T_CONSULTANT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_CRA" EntityType="Self.T_CRA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_CUSTOMER" EntityType="Self.T_CUSTOMER" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_PROJECT" EntityType="Self.T_PROJECT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_TYPEJOUR" EntityType="Self.T_TYPEJOUR" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_T_CONSULTANT_T_CUSTOMER" Association="Self.FK_T_CONSULTANT_T_CUSTOMER">
+            <End Role="T_CUSTOMER" EntitySet="T_CUSTOMER" />
+            <End Role="T_CONSULTANT" EntitySet="T_CONSULTANT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_CONSULTANT_T_PROJECT" Association="Self.FK_T_CONSULTANT_T_PROJECT">
+            <End Role="T_PROJECT" EntitySet="T_PROJECT" />
+            <End Role="T_CONSULTANT" EntitySet="T_CONSULTANT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_CRA_T_CONSULTANT" Association="Self.FK_T_CRA_T_CONSULTANT">
+            <End Role="T_CONSULTANT" EntitySet="T_CONSULTANT" />
+            <End Role="T_CRA" EntitySet="T_CRA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_CRA_T_TYPEJOUR" Association="Self.FK_T_CRA_T_TYPEJOUR">
+            <End Role="T_TYPEJOUR" EntitySet="T_TYPEJOUR" />
+            <End Role="T_CRA" EntitySet="T_CRA" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DevRedSolCRModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DevRedSolCRA" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="AddMonthValues">
+            <Parameter Name="MOIS" Mode="In" Type="String" />
+            <Parameter Name="ANNEE" Mode="In" Type="String" />
+            <Parameter Name="RESSOURCE" Mode="In" Type="Int32" />
+            <Parameter Name="JOUR" Mode="In" Type="String" />
+            <Parameter Name="JOURINFO" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteDayMonthValues">
+            <Parameter Name="MOIS" Mode="In" Type="String" />
+            <Parameter Name="ANNEE" Mode="In" Type="String" />
+            <Parameter Name="JOUR" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteMonthValues">
+            <Parameter Name="MOIS" Mode="In" Type="String" />
+            <Parameter Name="ANNEE" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="LoadCRAMonth" ReturnType="Collection(DevRedSolCRModel.LoadCRAMonth_Result)">
+            <Parameter Name="MOIS" Mode="In" Type="String" />
+            <Parameter Name="ANNEE" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="LoadLegende" ReturnType="Collection(DevRedSolCRModel.LoadLegende_Result)" />
+          <FunctionImport Name="LoadMonthValues" ReturnType="Collection(DevRedSolCRModel.LoadMonthValues_Result)">
+            <Parameter Name="MOIS" Mode="In" Type="String" />
+            <Parameter Name="ANNEE" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="LoadAllEventCRA" ReturnType="Collection(DevRedSolCRModel.LoadAllEventCRA_Result)" />
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(DevRedSolCRModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(DevRedSolCRModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+          <EntitySet Name="T_CONSULTANT" EntityType="DevRedSolCRModel.T_CONSULTANT" />
+          <EntitySet Name="T_CRA" EntityType="DevRedSolCRModel.T_CRA" />
+          <EntitySet Name="T_CUSTOMER" EntityType="DevRedSolCRModel.T_CUSTOMER" />
+          <EntitySet Name="T_PROJECT" EntityType="DevRedSolCRModel.T_PROJECT" />
+          <EntitySet Name="T_TYPEJOUR" EntityType="DevRedSolCRModel.T_TYPEJOUR" />
+          <AssociationSet Name="FK_T_CONSULTANT_T_CUSTOMER" Association="DevRedSolCRModel.FK_T_CONSULTANT_T_CUSTOMER">
+            <End Role="T_CUSTOMER" EntitySet="T_CUSTOMER" />
+            <End Role="T_CONSULTANT" EntitySet="T_CONSULTANT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_CONSULTANT_T_PROJECT" Association="DevRedSolCRModel.FK_T_CONSULTANT_T_PROJECT">
+            <End Role="T_PROJECT" EntitySet="T_PROJECT" />
+            <End Role="T_CONSULTANT" EntitySet="T_CONSULTANT" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_CRA_T_CONSULTANT" Association="DevRedSolCRModel.FK_T_CRA_T_CONSULTANT">
+            <End Role="T_CONSULTANT" EntitySet="T_CONSULTANT" />
+            <End Role="T_CRA" EntitySet="T_CRA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_T_CRA_T_TYPEJOUR" Association="DevRedSolCRModel.FK_T_CRA_T_TYPEJOUR">
+            <End Role="T_TYPEJOUR" EntitySet="T_TYPEJOUR" />
+            <End Role="T_CRA" EntitySet="T_CRA" />
+          </AssociationSet>
+        </EntityContainer>
+        <ComplexType Name="LoadCRAMonth_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="DATECRA" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="MOIS" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="ANNEE" Nullable="true" MaxLength="4" />
+          <Property Type="Int32" Name="RESSOURCE" Nullable="true" />
+          <Property Type="String" Name="NOM" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="PRENOM" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="SOCIETE" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CONTRAT" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CLIENT" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="JOUR" Nullable="true" MaxLength="2" />
+          <Property Type="Int32" Name="JOURINFO" Nullable="true" />
+          <Property Type="String" Name="TYPE" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="CHARGE" Nullable="true" Precision="2" Scale="1" />
+          <Property Type="String" Name="UNITE" Nullable="false" MaxLength="4" />
+          <Property Type="Int32" Name="SEMAINE" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="LoadLegende_Result">
+          <Property Type="String" Name="TYPE" Nullable="true" MaxLength="103" />
+          <Property Type="String" Name="COULEUR" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="LoadMonthValues_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="MOIS" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="ANNEE" Nullable="true" MaxLength="4" />
+          <Property Type="Int32" Name="RESSOURCE" Nullable="true" />
+          <Property Type="String" Name="JOUR" Nullable="true" MaxLength="2" />
+          <Property Type="Int32" Name="JOURINFO" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="LoadAllEventCRA_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="MOIS" Nullable="true" MaxLength="2" />
+          <Property Type="String" Name="ANNEE" Nullable="true" MaxLength="4" />
+          <Property Type="Int32" Name="RESSOURCE" Nullable="true" />
+          <Property Type="String" Name="JOUR" Nullable="true" MaxLength="2" />
+          <Property Type="Int32" Name="JOURINFO" Nullable="true" />
+          <Property Type="Int64" Name="MSDATE" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="T_CONSULTANT">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NOM" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PRENOM" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CLIENT" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SOCIETE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CONTRAT" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CUSTOMER_ID" Type="Int32" />
+          <Property Name="PROJECT_ID" Type="Int32" />
+          <NavigationProperty Name="T_CUSTOMER" Relationship="DevRedSolCRModel.FK_T_CONSULTANT_T_CUSTOMER" FromRole="T_CONSULTANT" ToRole="T_CUSTOMER" />
+          <NavigationProperty Name="T_PROJECT" Relationship="DevRedSolCRModel.FK_T_CONSULTANT_T_PROJECT" FromRole="T_CONSULTANT" ToRole="T_PROJECT" />
+          <NavigationProperty Name="T_CRA" Relationship="DevRedSolCRModel.FK_T_CRA_T_CONSULTANT" FromRole="T_CONSULTANT" ToRole="T_CRA" />
+        </EntityType>
+        <EntityType Name="T_CRA">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MOIS" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="ANNEE" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="RESSOURCE" Type="Int32" />
+          <Property Name="JOUR" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="JOURINFO" Type="Int32" />
+          <Property Name="DATEMS" Type="Int64" />
+          <NavigationProperty Name="T_CONSULTANT" Relationship="DevRedSolCRModel.FK_T_CRA_T_CONSULTANT" FromRole="T_CRA" ToRole="T_CONSULTANT" />
+          <NavigationProperty Name="T_TYPEJOUR" Relationship="DevRedSolCRModel.FK_T_CRA_T_TYPEJOUR" FromRole="T_CRA" ToRole="T_TYPEJOUR" />
+        </EntityType>
+        <EntityType Name="T_CUSTOMER">
+          <Key>
+            <PropertyRef Name="CUSTOMER_ID" />
+          </Key>
+          <Property Name="CUSTOMER_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CUSTOMER_NAME" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="CUSTOMER_CONTRACT" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="CUSTOMER_CONTACT" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="CUSTOMER_EMAIL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="CUSTOMER_ADDRESS" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CUSTOMER_PROJECT_ID" Type="Int32" Nullable="false" />
+          <Property Name="CUSTOMER_CREATION" Type="DateTime" Precision="3" />
+          <Property Name="CUSTOMER_UPDATE" Type="DateTime" Precision="3" />
+          <Property Name="CUSTOMER_ACTIF" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="T_CONSULTANT" Relationship="DevRedSolCRModel.FK_T_CONSULTANT_T_CUSTOMER" FromRole="T_CUSTOMER" ToRole="T_CONSULTANT" />
+        </EntityType>
+        <EntityType Name="T_PROJECT">
+          <Key>
+            <PropertyRef Name="PROJECT_ID" />
+          </Key>
+          <Property Name="PROJECT_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PROJECT_NAME" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="PROJECT_ACTIF" Type="Boolean" Nullable="false" />
+          <Property Name="PROJECT_CREATION" Type="DateTime" Precision="3" />
+          <Property Name="PROJECT_UPDATE" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="T_CONSULTANT" Relationship="DevRedSolCRModel.FK_T_CONSULTANT_T_PROJECT" FromRole="T_PROJECT" ToRole="T_CONSULTANT" />
+        </EntityType>
+        <EntityType Name="T_TYPEJOUR">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TYPE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NOMBRE" Type="Int32" />
+          <Property Name="COLOR" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="T_CRA" Relationship="DevRedSolCRModel.FK_T_CRA_T_TYPEJOUR" FromRole="T_TYPEJOUR" ToRole="T_CRA" />
+        </EntityType>
+        <Association Name="FK_T_CONSULTANT_T_CUSTOMER">
+          <End Type="DevRedSolCRModel.T_CUSTOMER" Role="T_CUSTOMER" Multiplicity="0..1" />
+          <End Type="DevRedSolCRModel.T_CONSULTANT" Role="T_CONSULTANT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_CUSTOMER">
+              <PropertyRef Name="CUSTOMER_ID" />
+            </Principal>
+            <Dependent Role="T_CONSULTANT">
+              <PropertyRef Name="CUSTOMER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_CONSULTANT_T_PROJECT">
+          <End Type="DevRedSolCRModel.T_PROJECT" Role="T_PROJECT" Multiplicity="0..1" />
+          <End Type="DevRedSolCRModel.T_CONSULTANT" Role="T_CONSULTANT" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_PROJECT">
+              <PropertyRef Name="PROJECT_ID" />
+            </Principal>
+            <Dependent Role="T_CONSULTANT">
+              <PropertyRef Name="PROJECT_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_CRA_T_CONSULTANT">
+          <End Type="DevRedSolCRModel.T_CONSULTANT" Role="T_CONSULTANT" Multiplicity="0..1" />
+          <End Type="DevRedSolCRModel.T_CRA" Role="T_CRA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_CONSULTANT">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="T_CRA">
+              <PropertyRef Name="RESSOURCE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_T_CRA_T_TYPEJOUR">
+          <End Type="DevRedSolCRModel.T_TYPEJOUR" Role="T_TYPEJOUR" Multiplicity="0..1" />
+          <End Type="DevRedSolCRModel.T_CRA" Role="T_CRA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_TYPEJOUR">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="T_CRA">
+              <PropertyRef Name="JOURINFO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DevRedSolCRModelStoreContainer" CdmEntityContainer="DevRedSolCRA">
+          <FunctionImportMapping FunctionImportName="AddMonthValues" FunctionName="DevRedSolCRModel.Store.AddMonthValues" />
+          <FunctionImportMapping FunctionImportName="DeleteDayMonthValues" FunctionName="DevRedSolCRModel.Store.DeleteDayMonthValues" />
+          <FunctionImportMapping FunctionImportName="DeleteMonthValues" FunctionName="DevRedSolCRModel.Store.DeleteMonthValues" />
+          <FunctionImportMapping FunctionImportName="LoadCRAMonth" FunctionName="DevRedSolCRModel.Store.LoadCRAMonth">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DevRedSolCRModel.LoadCRAMonth_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="DATECRA" ColumnName="DATECRA" />
+                <ScalarProperty Name="MOIS" ColumnName="MOIS" />
+                <ScalarProperty Name="ANNEE" ColumnName="ANNEE" />
+                <ScalarProperty Name="RESSOURCE" ColumnName="RESSOURCE" />
+                <ScalarProperty Name="NOM" ColumnName="NOM" />
+                <ScalarProperty Name="PRENOM" ColumnName="PRENOM" />
+                <ScalarProperty Name="SOCIETE" ColumnName="SOCIETE" />
+                <ScalarProperty Name="CONTRAT" ColumnName="CONTRAT" />
+                <ScalarProperty Name="CLIENT" ColumnName="CLIENT" />
+                <ScalarProperty Name="JOUR" ColumnName="JOUR" />
+                <ScalarProperty Name="JOURINFO" ColumnName="JOURINFO" />
+                <ScalarProperty Name="TYPE" ColumnName="TYPE" />
+                <ScalarProperty Name="CHARGE" ColumnName="CHARGE" />
+                <ScalarProperty Name="UNITE" ColumnName="UNITE" />
+                <ScalarProperty Name="SEMAINE" ColumnName="SEMAINE" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="LoadLegende" FunctionName="DevRedSolCRModel.Store.LoadLegende">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DevRedSolCRModel.LoadLegende_Result">
+                <ScalarProperty Name="TYPE" ColumnName="TYPE" />
+                <ScalarProperty Name="COULEUR" ColumnName="COULEUR" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="LoadMonthValues" FunctionName="DevRedSolCRModel.Store.LoadMonthValues">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DevRedSolCRModel.LoadMonthValues_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="MOIS" ColumnName="MOIS" />
+                <ScalarProperty Name="ANNEE" ColumnName="ANNEE" />
+                <ScalarProperty Name="RESSOURCE" ColumnName="RESSOURCE" />
+                <ScalarProperty Name="JOUR" ColumnName="JOUR" />
+                <ScalarProperty Name="JOURINFO" ColumnName="JOURINFO" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="LoadAllEventCRA" FunctionName="DevRedSolCRModel.Store.LoadAllEventCRA">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DevRedSolCRModel.LoadAllEventCRA_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="MOIS" ColumnName="MOIS" />
+                <ScalarProperty Name="ANNEE" ColumnName="ANNEE" />
+                <ScalarProperty Name="RESSOURCE" ColumnName="RESSOURCE" />
+                <ScalarProperty Name="JOUR" ColumnName="JOUR" />
+                <ScalarProperty Name="JOURINFO" ColumnName="JOURINFO" />
+                <ScalarProperty Name="MSDATE" ColumnName="MSDATE" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="DevRedSolCRModel.Store.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="DevRedSolCRModel.Store.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="DevRedSolCRModel.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="DevRedSolCRModel.Store.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DevRedSolCRModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="DevRedSolCRModel.Store.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DevRedSolCRModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="DevRedSolCRModel.Store.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="DevRedSolCRModel.Store.sp_upgraddiagrams" />
+          <EntitySetMapping Name="T_CONSULTANT">
+            <EntityTypeMapping TypeName="DevRedSolCRModel.T_CONSULTANT">
+              <MappingFragment StoreEntitySet="T_CONSULTANT">
+                <ScalarProperty Name="PROJECT_ID" ColumnName="PROJECT_ID" />
+                <ScalarProperty Name="CUSTOMER_ID" ColumnName="CUSTOMER_ID" />
+                <ScalarProperty Name="CONTRAT" ColumnName="CONTRAT" />
+                <ScalarProperty Name="SOCIETE" ColumnName="SOCIETE" />
+                <ScalarProperty Name="CLIENT" ColumnName="CLIENT" />
+                <ScalarProperty Name="PRENOM" ColumnName="PRENOM" />
+                <ScalarProperty Name="NOM" ColumnName="NOM" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_CRA">
+            <EntityTypeMapping TypeName="DevRedSolCRModel.T_CRA">
+              <MappingFragment StoreEntitySet="T_CRA">
+                <ScalarProperty Name="DATEMS" ColumnName="DATEMS" />
+                <ScalarProperty Name="JOURINFO" ColumnName="JOURINFO" />
+                <ScalarProperty Name="JOUR" ColumnName="JOUR" />
+                <ScalarProperty Name="RESSOURCE" ColumnName="RESSOURCE" />
+                <ScalarProperty Name="ANNEE" ColumnName="ANNEE" />
+                <ScalarProperty Name="MOIS" ColumnName="MOIS" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_CUSTOMER">
+            <EntityTypeMapping TypeName="DevRedSolCRModel.T_CUSTOMER">
+              <MappingFragment StoreEntitySet="T_CUSTOMER">
+                <ScalarProperty Name="CUSTOMER_ACTIF" ColumnName="CUSTOMER_ACTIF" />
+                <ScalarProperty Name="CUSTOMER_UPDATE" ColumnName="CUSTOMER_UPDATE" />
+                <ScalarProperty Name="CUSTOMER_CREATION" ColumnName="CUSTOMER_CREATION" />
+                <ScalarProperty Name="CUSTOMER_PROJECT_ID" ColumnName="CUSTOMER_PROJECT_ID" />
+                <ScalarProperty Name="CUSTOMER_ADDRESS" ColumnName="CUSTOMER_ADDRESS" />
+                <ScalarProperty Name="CUSTOMER_EMAIL" ColumnName="CUSTOMER_EMAIL" />
+                <ScalarProperty Name="CUSTOMER_CONTACT" ColumnName="CUSTOMER_CONTACT" />
+                <ScalarProperty Name="CUSTOMER_CONTRACT" ColumnName="CUSTOMER_CONTRACT" />
+                <ScalarProperty Name="CUSTOMER_NAME" ColumnName="CUSTOMER_NAME" />
+                <ScalarProperty Name="CUSTOMER_ID" ColumnName="CUSTOMER_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_PROJECT">
+            <EntityTypeMapping TypeName="DevRedSolCRModel.T_PROJECT">
+              <MappingFragment StoreEntitySet="T_PROJECT">
+                <ScalarProperty Name="PROJECT_UPDATE" ColumnName="PROJECT_UPDATE" />
+                <ScalarProperty Name="PROJECT_CREATION" ColumnName="PROJECT_CREATION" />
+                <ScalarProperty Name="PROJECT_ACTIF" ColumnName="PROJECT_ACTIF" />
+                <ScalarProperty Name="PROJECT_NAME" ColumnName="PROJECT_NAME" />
+                <ScalarProperty Name="PROJECT_ID" ColumnName="PROJECT_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_TYPEJOUR">
+            <EntityTypeMapping TypeName="DevRedSolCRModel.T_TYPEJOUR">
+              <MappingFragment StoreEntitySet="T_TYPEJOUR">
+                <ScalarProperty Name="COLOR" ColumnName="COLOR" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="TYPE" ColumnName="TYPE" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

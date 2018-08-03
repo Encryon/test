@@ -1,0 +1,66 @@
+﻿@model MVCCal.T_CRA
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>T_CRA</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MOIS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MOIS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ANNEE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ANNEE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.JOUR)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.JOUR)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.JOURINFO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.JOURINFO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DATEMS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DATEMS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.T_CONSULTANT.NOM)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.T_CONSULTANT.NOM)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
